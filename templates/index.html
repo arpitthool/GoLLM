@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Go Gin Web App</title>
+    <title>Go Gin Web App - Result</title>
 </head>
 <body>
     <h1>Input Form</h1>
     <form action="/submit" method="post">
-        <input type="text" name="userInput" placeholder="Enter something">
+        <!-- <input type="text" name="userInput" placeholder="Enter something"> -->
+        <textarea name="userInput" placeholder="How can I help you?" rows="10" cols="50"></textarea>
+        <br>
         <input type="submit" value="Submit">
     </form>
+    <h1>Result</h1>
+    <!-- <p>You entered: {{ .userInput }}</p> -->
+    <!-- <br> -->
+    <p>Chat History: {{ .history }}</p>
 </body>
 </html>
