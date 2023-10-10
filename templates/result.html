@@ -4,6 +4,7 @@
     <title>Go Gin Web App - Result</title>
 </head>
 <body>
+    <h2>DEVELOPED BY ARPIT THOOL USING GO & OLLAMA</h2>
     <h1>Input Form</h1>
     <form action="/submit" method="post">
         <!-- <input type="text" name="userInput" placeholder="Enter something"> -->
@@ -11,9 +12,13 @@
         <br>
         <input type="submit" value="Submit">
     </form>
-    <h1>History</h1>
+    <h1>Chat History</h1>
     <!-- <p>You entered: {{ .userInput }}</p> -->
     <!-- <br> -->
-    <p>{{ .history }}</p>
+    <!-- {{ .history }} -->
+
+    {{ range .historyArray}}
+        {{ . }} <br>
+    {{ end}}
 </body>
 </html>

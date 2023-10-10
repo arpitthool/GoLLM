@@ -10,7 +10,9 @@ import (
 )
 
 // global variable
-var history string = ""
+// var history string = ""
+var historyArray []string
+// var historyArray [4]string = [4]string{"a","b","c","d"}
 
 func getHello(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, "hello!")
@@ -115,7 +117,8 @@ func postToLLMModel(context *gin.Context) {
 		JSONParsedResponseString := parseJSONResponseFromLLM(responseBody)
 
 		// update history
-		history += userInput + " -> " + JSONParsedResponseString + "\n\n"
+		// history += userInput + " -> " + JSONParsedResponseString 
+		historyArray = append(historyArray, userInput + " -> " + JSONParsedResponseString)
 
         // Respond with the response status and body as JSON
         // context.JSON(http.StatusOK, gin.H{
@@ -124,7 +127,8 @@ func postToLLMModel(context *gin.Context) {
         // })
 
     	// context.HTML(http.StatusOK, "index.html", gin.H{"userInput": userInput, "history": history})
-    	context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput, "history": history})
+    	// context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput, "history": history, "historyArray": historyArray})
+    	context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput, "historyArray": historyArray})
 }
 
 func main() {
