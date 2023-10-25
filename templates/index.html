@@ -2,18 +2,31 @@
 <html>
 <head>
     <title>Go Gin Web App - Result</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Input Form</h1>
-    <form action="/submit" method="post">
-        <!-- <input type="text" name="userInput" placeholder="Enter something"> -->
-        <textarea name="userInput" placeholder="How can I help you?" rows="10" cols="50"></textarea>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    <h1>Result</h1>
-    <!-- <p>You entered: {{ .userInput }}</p> -->
-    <!-- <br> -->
-    <p>Chat History: {{ .history }}</p>
+    <div class="container">
+        <h2 class="mt-4 text-center">Developed By Arpit Thool using Ollama and Go</h2>
+        <h1 class="mt-5">How can I help you?</h1>
+        <form action="/GoLLM" method="post">
+            <div class="form-group">
+                <!-- <label for="userInput">How can I help you?</label> -->
+                <textarea class="form-control" id="userInput" name="userInput" rows="5" placeholder="Enter your message"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <h1 class="mt-5">Chat History</h1>
+        <div class="mt-3">
+            <ul class="list-group">
+                {{ range .historyArray }}
+                <li class="list-group-item">{{ . }}</li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

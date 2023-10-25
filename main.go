@@ -4,27 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"bytes"
-	// "encoding/json"
 	"regexp"
-    // "fmt"
 )
 
-// global variable
-// var history string = ""
 var historyArray []string
-// var historyArray [4]string = [4]string{"a","b","c","d"}
-
-func getHello(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, "hello!")
-}
+var llmModel = "llama2-uncensored:cpu"
+var ollamaAPIURL = "http://localhost:11434/api/generate"
 
 func getHomePage(context *gin.Context) {
-	context.HTML(http.StatusOK, "index.html", nil)
-}
+	context.HTML(http.StatusOK, "index.html", gin.H{"historyArray": historyArray})
 
-func postHomePageForm(context *gin.Context) {
-	userInput := context.PostForm("userInput")
-    context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput})
 }
 
 func parseJSONResponseFromLLM(JSONResponse *bytes.Buffer) string {
@@ -36,49 +25,17 @@ func parseJSONResponseFromLLM(JSONResponse *bytes.Buffer) string {
 		finalString += stringArray[i][11:]
 	}
 	return finalString 
-	// return finalString + "      " + JSONResponse.String()
-	// return JSONResponse.String()
 }
 
-// // decalre a struct
-// type LLMResponse struct {
-// 	// defining struct variables
-// 	model 		string
-// 	created_at 	string
-// 	response	string
-// 	done		bool
-// }
-
-// // function to parse JSON response from LLM model 
-// func parseJSONResponseFromLLM(JSONResponse *bytes.Buffer) string {
-// 	// defining a struct instance
-// 	var LLMResponseArray []LLMResponse
-
-// 	// decoding JSON array
-// 	err := json.Unmarshal(JSONResponse, &LLMResponseArray)
-
-// 	if err != nil {
-// 		return "ERROR!!!!!!"
-// 	}
-
-// 	finalString := ""
-// 	for i := range LLMResponseArray {
-// 		finalString += LLMResponseArray[i].response
-// 	}
-
-// 	// return JSONResponse.String()
-// 	return finalString
-// }
-
 func postToLLMModel(context *gin.Context) {
-	modelRestriction := "[Give your answer in one word]"
+	modelRestriction := "[Give your answer in less than 250 character]"
 	userInput := context.PostForm("userInput")
 
 	// url
-	url := "http://localhost:11434/api/generate"
+	url := ollamaAPIURL
 
 	x := `{
-		"model": "llama2-uncensored:cpu",
+		"model": `+llmModel+`,
 		"prompt": "`+userInput+modelRestriction+`"
 	}`
 
@@ -116,38 +73,27 @@ func postToLLMModel(context *gin.Context) {
 		// parse the json
 		JSONParsedResponseString := parseJSONResponseFromLLM(responseBody)
 
-		// update history
-		// history += userInput + " -> " + JSONParsedResponseString 
-		historyArray = append(historyArray, userInput + " -> " + JSONParsedResponseString)
+		// historyArray = append(historyArray, userInput + " -> " + JSONParsedResponseString)
+		historyArray = append(historyArray, userInput )
+		historyArray = append(historyArray, JSONParsedResponseString)
 
-        // Respond with the response status and body as JSON
-        // context.JSON(http.StatusOK, gin.H{
-        //     "status": resp.Status,
-        //     "body":   responseBody.String(),
-        // })
-
-    	// context.HTML(http.StatusOK, "index.html", gin.H{"userInput": userInput, "history": history})
-    	// context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput, "history": history, "historyArray": historyArray})
-    	context.HTML(http.StatusOK, "result.html", gin.H{"userInput": userInput, "historyArray": historyArray})
+    	context.HTML(http.StatusOK, "index.html", gin.H{"userInput": userInput, "historyArray": historyArray})
 }
 
 func main() {
 	router := gin.Default()
 
-	router.GET("/hello", getHello)
-
 	// Define a route for the home page
-	router.GET("/", getHomePage)
+	router.GET("/GoLLM", getHomePage)
 
     // Define a route to handle the form submission
-    router.POST("/submit", postToLLMModel)
-    router.POST("/", postToLLMModel)
+    router.POST("/GoLLM", postToLLMModel)
 
     // Serve static files (e.g., CSS, JavaScript) from the "static" directory
     router.Static("/static", "./static")
 
     // Load HTML templates
-    router.LoadHTMLFiles("templates/index.html", "templates/result.html")
+    router.LoadHTMLFiles("templates/index.html")
 
 	router.Run("localhost:8080")
 }
