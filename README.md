@@ -11,5 +11,5 @@ ChatGPT clone using OLLAMA and Go web app
 go run main.go
 
 
-https://github.com/arpitthool/GoLLM/assets/26833013/d6e85d95-931b-44a9-9c1d-310f0a7af7fb
+https://github.com/arpitthool/GoLLM/assets/26833013/bcb29f5e-0dbd-40fb-a925-332cdbff1277
 
